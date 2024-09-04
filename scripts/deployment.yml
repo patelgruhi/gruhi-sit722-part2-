@@ -1,1 +1,36 @@
-# Write Kubernetes Deployment Script
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: booklet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: booklet
+  template:
+    metadata:
+      labels:
+        app: booklet
+    spec:
+      containers:
+        - name: booklet
+          image: image2:1
+          ports:
+            - containerPort: 8000
+          imagePullPolicy: Never
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://db_2example_user:nCZOwz6DkrXpqkO8nEmo3R5hR1ukYfyh@dpg-crc4ept6l47c73db3r1g-a.oregon-postgres.render.com/db_2example"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: booklet
+spec:
+  selector:
+    app: booklet
+  type: NodePort
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
